@@ -1,5 +1,6 @@
 import socket
 import threading
+import rsa
 
 
 # Connection Data
@@ -14,6 +15,7 @@ server.listen()
 # Lists For Clients and Their Nicknames
 clients = []
 nicknames = []
+keys = []
 
 # Sending Messages To All Connected Clients
 def broadcast(message):
@@ -26,6 +28,7 @@ def handle(client):
         try:
             # Broadcasting Messages
             message = client.recv(1024)
+            
             broadcast(message)
         except:
             # Removing And Closing Clients
@@ -47,8 +50,25 @@ def receive():
         # Request And Store Nickname
         client.send('NICK'.encode('ascii'))
         nickname = client.recv(1024).decode('ascii')
+        client.send('KEY'.encode('ascii'))
+        key = rsa.PublicKey.load_pkcs1(client.recv(1024))
+        
+       
+        keys.append(key)
         nicknames.append(nickname)
         clients.append(client)
+
+        if(len(clients)==2):
+            client.send('PARTNER'.encode('ascii'))
+            client.send(keys[0].save_pkcs1("PEM"))
+            print(key)
+            client2 = clients[0]
+            client2.send('PARTNER'.encode('ascii'))
+            client2.send(keys[1].save_pkcs1("PEM"))
+        else:
+            print()
+            
+
 
         # Print And Broadcast Nickname
         print("Nickname is {}".format(nickname))
