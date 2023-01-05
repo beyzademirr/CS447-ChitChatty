@@ -14,6 +14,7 @@ client.connect(('127.0.0.1', 65535))
 
 # Listening to Server and Sending Nickname
 def receive():
+    global public_partner
     while True:
         try:
             # Receive Message From Server
