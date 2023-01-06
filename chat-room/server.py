@@ -67,6 +67,7 @@ def receive():
         clients.append(client)
 
         if(len(clients)==2):
+            print("AAAAAAAAAAAAAAAAAAAAAAAAA")
             client.send('PARTNER'.encode('ascii'))
             client.send(keys[0].save_pkcs1("PEM"))
             #client.send('PARTNER-NAME'.encode('ascii'))
