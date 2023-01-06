@@ -44,13 +44,14 @@ def handle(client):
             clients.remove(client)
             client.close()
             nickname = nicknames[index]
-            broadcast('{} left!'.format(nickname).encode('ascii'))
+            #broadcast('{} left!'.format(nickname).encode('ascii'))
             nicknames.remove(nickname)
             break
 
 # Receiving / Listening Function
 def receive():
     while True:
+        print(len(clients))
         # Accept Connection
         client, address = server.accept()
         print("Connected with {}".format(str(address)))
