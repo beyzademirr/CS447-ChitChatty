@@ -39,8 +39,10 @@ def handle(client):
             message = client.recv(1024)
             if len(clients)==2:
                 if(client==clients[0]):
+                    clients[1].send('MESSAGE'.encode('ascii'))
                     clients[1].send(message)
                 else:
+                    clients[0].send('MESSAGE'.encode('ascii'))
                     clients[0].send(message)
         except:
             # Removing And Closing Clients
