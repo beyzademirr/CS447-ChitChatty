@@ -10,7 +10,7 @@ public_partner = None
 
 # Connecting To Server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('127.0.0.1', 65535))
+client.connect(('172.24.128.1', 65535))
 
 # Listening to Server and Sending Nickname
 def receive():
@@ -19,19 +19,22 @@ def receive():
         try:
             # Receive Message From Server
             # If 'NICK' Send Nickname
-            msg = client.recv(1024)
-            message = msg.decode('ascii')
+            message = client.recv(1024).decode('ascii')
             if message == 'NICK':
                 client.send(nickname.encode('ascii'))
             elif message == 'KEY':
                 client.send(public_key.save_pkcs1("PEM"))
             elif message == 'PARTNER':
                 public_partner = rsa.PublicKey.load_pkcs1(client.recv(1024))
-                print(public_partner)
+                print("cool")
+            elif message == 'MESSAGE':
+                print("Partner: " + rsa.decrypt(client.recv(1024), private_key).decode()) 
             else:
+                print("dont come")
                 print(message)
-        except:
+        except Exception as e:
             # Close Connection When Error
+            print(e)
             print("An error occured!")
             client.close()
             break
@@ -39,10 +42,11 @@ def receive():
 # Sending Messages To Server
 def write():
     while True:
-        message = '{}: {}'.format(nickname, input(''))
+        message = input('')
         
-        client.send(message.encode('ascii'))
-        print(public_partner)
+        client.send(rsa.encrypt(message.encode(), public_partner))
+        print("You: " + message)
+
 
 # Starting Threads For Listening And Writing
 receive_thread = threading.Thread(target=receive)
