@@ -5,7 +5,7 @@ import rsa
 
 # Connection Data
 host = ''
-port = 3389
+port = 55555
 
 # Starting Server
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
