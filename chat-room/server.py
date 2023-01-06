@@ -4,7 +4,7 @@ import rsa
 
 
 # Connection Data
-host = '127.0.0.1'
+host = '172.24.128.1'
 port = 65535
 
 # Starting Server
@@ -18,7 +18,14 @@ nicknames = []
 keys = []
 
 # Sending Messages To All Connected Clients
-def broadcast(message):
+def broadcast(message, client0):
+    for client in clients:
+        if client0!=client:
+            client.send('MESSAGE'.encode('ascii'))
+            client.send(message)
+
+# Sending Messages To All Connected Clients
+def broadcast2(message):
     for client in clients:
         client.send(message)
 
@@ -28,8 +35,7 @@ def handle(client):
         try:
             # Broadcasting Messages
             message = client.recv(1024)
-            
-            broadcast(message)
+            broadcast(message, client)
         except:
             # Removing And Closing Clients
             index = clients.index(client)
@@ -72,7 +78,7 @@ def receive():
 
         # Print And Broadcast Nickname
         print("Nickname is {}".format(nickname))
-        broadcast("{} joined!".format(nickname).encode('ascii'))
+        broadcast2("{} joined!".format(nickname).encode('ascii'))
         client.send('Connected to server!'.encode('ascii'))
 
         # Start Handling Thread For Client
