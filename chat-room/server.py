@@ -37,7 +37,11 @@ def handle(client):
         try:
             # Broadcasting Messages
             message = client.recv(1024)
-            broadcast(message, client)
+            if len(clients)==2:
+                if(client==clients[0]):
+                    clients[1].send(message)
+                else:
+                    clients[0].send(message)
         except:
             # Removing And Closing Clients
             index = clients.index(client)
@@ -51,7 +55,6 @@ def handle(client):
 # Receiving / Listening Function
 def receive():
     while True:
-        print(len(clients))
         # Accept Connection
         client, address = server.accept()
         print("Connected with {}".format(str(address)))
