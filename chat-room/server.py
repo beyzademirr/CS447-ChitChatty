@@ -4,8 +4,8 @@ import rsa
 
 
 # Connection Data
-host = '172.24.128.1'
-port = 65535
+host = ''
+port = 3389
 
 # Starting Server
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,15 +19,17 @@ keys = []
 
 # Sending Messages To All Connected Clients
 def broadcast(message, client0):
-    for client in clients:
-        if client0!=client:
-            client.send('MESSAGE'.encode('ascii'))
-            client.send(message)
+    if len(clients)==2:
+        for client in clients:
+            if client0!=client:
+                client.send('MESSAGE'.encode('ascii'))
+                client.send(message)
 
 # Sending Messages To All Connected Clients
 def broadcast2(message):
-    for client in clients:
-        client.send(message)
+    if len(clients)==2:
+        for client in clients:
+            client.send(message)
 
 # Handling Messages From Clients
 def handle(client):
@@ -67,10 +69,14 @@ def receive():
         if(len(clients)==2):
             client.send('PARTNER'.encode('ascii'))
             client.send(keys[0].save_pkcs1("PEM"))
-            print(key)
+            #client.send('PARTNER-NAME'.encode('ascii'))
+            #client.send(nicknames[0].encode())
+            
             client2 = clients[0]
             client2.send('PARTNER'.encode('ascii'))
             client2.send(keys[1].save_pkcs1("PEM"))
+            #client2.send('PARTNER-NAME'.encode('ascii'))
+            #client2.send(nicknames[1].encode())
         else:
             print()
             
