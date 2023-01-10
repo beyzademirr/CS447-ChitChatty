@@ -26,11 +26,9 @@ def receive():
                 client.send(public_key.save_pkcs1("PEM"))
             elif message == 'PARTNER':
                 public_partner = rsa.PublicKey.load_pkcs1(client.recv(1024))
-                print("cool")
             elif message == 'MESSAGE':
                 print("Partner: " + rsa.decrypt(client.recv(1024), private_key).decode()) 
             else:
-                print("dont come")
                 print(message)
         except Exception as e:
             # Close Connection When Error
