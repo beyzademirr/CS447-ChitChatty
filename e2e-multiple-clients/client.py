@@ -27,6 +27,7 @@ def receive():
                 client.send(public_key.save_pkcs1("PEM"))
             elif message == 'PARTNER':
                 public_partner = rsa.PublicKey.load_pkcs1(client.recv(1024))
+                print("Your partner has joined")
             elif message == 'MESSAGE':
                 print("Partner: " + rsa.decrypt(client.recv(1024), private_key).decode()) 
             else:
@@ -44,9 +45,11 @@ def write():
     
         message = input('')
 
-        if(message!=''):
+        if(message!='' and public_partner!=None):
          client.send(rsa.encrypt(message.encode(), public_partner))
          print("You: " + message)
+        else:
+            print("Wait for your partner")
         
         
 
