@@ -18,6 +18,14 @@ nicknames = []
 keys = []
 partners = []
 
+def ind(list, client):
+    try:
+        index = list.index(client)
+        return index
+    
+    except:
+        return -1
+
 # Sending Messages To All Connected Clients
 def broadcast(message, client0):
     index = clients.index(client0)
@@ -36,28 +44,35 @@ def handle(client):
         try:
             # Broadcasting Messages
             message = client.recv(1024)
-            index = clients.index(client)
-            print(nicknames[index])
-            print(message)
+            index0 = clients.index(client)
+            print(nicknames[index0])
+            #print(message)
             if(message!=b''):
              broadcast(message, client)
         except:
             # Removing And Closing Clients
-            size = len(clients)
-            index = clients.index(client)
-            index2 = partners.index(client)
-            client2 = clients[index2]
-            clients.remove(client)
-            clients.remove(client2)
-            partners.remove(client)
-            partners.remove(client2)
-            client.close()
-            client2.close()
-            nickname = nicknames[index]
-            nickname2 = nicknames[index2]
-            #broadcast('{} left!'.format(nickname).encode('ascii'))
-            nicknames.remove(nickname)
-            nicknames.remove(nickname2)
+            index1 = ind(clients, client)
+            if(index1==-1): break
+        
+            index2 = ind(partners, client)
+            
+            if(index2!=-1):
+                client2 = clients[index2]
+                clients.remove(client)
+                clients.remove(client2)
+                partners.remove(client)
+                partners.remove(client2)
+                client.close()
+                client2.close()
+                nickname = nicknames[index1]
+                nickname2 = nicknames[index2]
+                nicknames.remove(nickname)
+                nicknames.remove(nickname2)
+                key1 = keys[index1]
+                key2 = keys[index2]
+                keys.remove(key1)
+                keys.remove(key2)
+                break
             break
 
 # Receiving / Listening Function
