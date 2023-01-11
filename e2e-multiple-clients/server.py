@@ -73,6 +73,14 @@ def handle(client):
                 keys.remove(key1)
                 keys.remove(key2)
                 break
+            clients.remove(client)
+            client.close()
+            nickname = nicknames[index1]
+            #broadcast('{} left!'.format(nickname).encode('ascii'))
+            nicknames.remove(nickname)
+            key1 = keys[index1]
+            keys.remove(key1)
+
             break
 
 # Receiving / Listening Function
