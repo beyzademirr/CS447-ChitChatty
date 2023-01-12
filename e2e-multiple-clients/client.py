@@ -11,12 +11,12 @@ public_partner = None
 # Connecting To Server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1'
-, 65532))
-stop_event = threading.Event()
+, 65535))
+
 # Listening to Server and Sending Nickname
 def receive():
     global public_partner
-    while not stop_event.set():
+    while True:
         try:
             # Receive Message From Server
             # If 'NICK' Send Nickname
@@ -29,7 +29,9 @@ def receive():
                 public_partner = rsa.PublicKey.load_pkcs1(client.recv(1024))
                 print("Your partner has joined")
             elif message == 'MESSAGE':
-                print("Partner: " + rsa.decrypt(client.recv(1024), private_key).decode('ascii'))
+                print("Partner: " + rsa.decrypt(client.recv(1024), private_key).decode())
+            elif message == 'CLOSE':
+                client.close()
             else:
                 print(message)
         except Exception as e:
@@ -41,7 +43,7 @@ def receive():
 
 # Sending Messages To Server
 def write():
-    while not stop_event.set():
+    while True:
     
         message = input('')
 
@@ -50,10 +52,8 @@ def write():
          print("You: " + message)
         else:
             print("Wait for your partner")
-
-def close_chat():
-    stop_event.set()
-    client.close()
+        
+        
 
 
 # Starting Threads For Listening And Writing
