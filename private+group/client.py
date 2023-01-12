@@ -64,6 +64,12 @@ def write():
 # Starting Threads For Listening And Writing
 receive_thread = threading.Thread(target=receive)
 receive_thread.start()
-
 write_thread = threading.Thread(target=write)
 write_thread.start()
+
+# Wait for the threads to finish execution before client close
+try:
+    receive_thread.join()
+    write_thread.join()
+except KeyboardInterrupt:
+    client.close()
