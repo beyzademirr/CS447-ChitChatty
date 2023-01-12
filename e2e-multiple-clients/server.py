@@ -5,7 +5,7 @@ import rsa
 
 # Connection Data
 host = '127.0.0.1'
-port = 65535
+port = 65532
 
 # Starting Server
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -46,7 +46,7 @@ def handle(client):
             message = client.recv(1024)
             index0 = clients.index(client)
             print(nicknames[index0])
-            #print(message)
+            # print(message)
             if(message!=b''):
              broadcast(message, client)
         except:
@@ -76,7 +76,7 @@ def handle(client):
             clients.remove(client)
             client.close()
             nickname = nicknames[index1]
-            #broadcast('{} left!'.format(nickname).encode('ascii'))
+            # broadcast('{} left!'.format(nickname).encode('ascii'))
             nicknames.remove(nickname)
             key1 = keys[index1]
             keys.remove(key1)
