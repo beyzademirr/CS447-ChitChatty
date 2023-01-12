@@ -32,7 +32,7 @@ def receive():
                 public_partner = rsa.PublicKey.load_pkcs1(client.recv(1024))
                 print("Your partner has joined")
             elif message == 'MESSAGE':
-                print("Partner: " + rsa.decrypt(client.recv(1024), private_key).decode())
+                print("Partner: " + rsa.decrypt(client.recv(1024), private_key).decode('ascii'))
             elif message == 'CLOSE':
                 client.close()
             else:
