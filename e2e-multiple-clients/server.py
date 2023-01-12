@@ -5,7 +5,7 @@ import rsa
 
 # Connection Data
 host = '127.0.0.1'
-port = 65535
+port = 65527
 
 # Starting Server
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -18,13 +18,14 @@ nicknames = []
 keys = []
 partners = []
 
+
 def ind(list, client):
     try:
         index = list.index(client)
         return index
-    
     except:
         return -1
+
 
 # Sending Messages To All Connected Clients
 def broadcast(message, client0):
@@ -33,10 +34,12 @@ def broadcast(message, client0):
     client.send('MESSAGE'.encode('ascii'))
     client.send(message)
 
+
 # Sending Messages To All Connected Clients
 def broadcast2(message):
     for client in clients:
         client.send(message)
+
 
 # Handling Messages From Clients
 def handle(client):
@@ -84,6 +87,7 @@ def handle(client):
 
             break
 
+
 # Receiving / Listening Function
 def receive():
     while True:
@@ -96,8 +100,7 @@ def receive():
         nickname = client.recv(1024).decode('ascii')
         client.send('KEY'.encode('ascii'))
         key = rsa.PublicKey.load_pkcs1(client.recv(1024))
-        
-       
+
         keys.append(key)
         nicknames.append(nickname)
         clients.append(client)
