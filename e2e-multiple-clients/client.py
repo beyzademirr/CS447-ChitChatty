@@ -68,4 +68,8 @@ receive_thread.start()
 write_thread = threading.Thread(target=write)
 write_thread.start()
 
-
+try:
+    receive_thread.join()
+    write_thread.join()
+except KeyboardInterrupt:
+    client.close()
